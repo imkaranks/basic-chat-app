@@ -1,61 +1,42 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Realtime Chat Webapp</title>
-    <style>
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-      #input:focus { outline: none; }
-      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="script.js" defer></script>
+  <title>Realtime Chat App</title>
+</head>
 
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages > li { padding: 0.5rem 1rem; }
-      #messages > li:nth-child(even) { float: left; clear: both; }
-      #messages > li:nth-child(odd) { background: #efefef; float: right; clear: both; }
-    </style>
-  </head>
-  <body>
-    <h1 id="user">Anonymous</h1>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const username = prompt("What's your user name?");
-      const socket = io();
-      
-      const user = document.getElementById('user');
-      user.textContent = username;
-      const messages = document.getElementById('messages');
-      const form = document.getElementById('form');
-      const input = document.getElementById('input');
-      
-      socket.emit('user joined', username ?? 'Anonymous');
+<body class="min-h-screen bg-slate-800">
+  <div class="mx-auto min-h-screen w-11/12 max-w-7xl gap-8 bg-slate-900 p-4 text-slate-200 sm:flex">
+    <aside class="hidden sm:block sm:flex-[0.2]">
+      <ul class="space-y-4" id="users"></ul>
+    </aside>
+    <main class="relative h-full sm:flex-[0.8]">
+      <div>
+        <h2 class="text-xl font-medium leading-none text-white">Chat Room</h2>
+        <p class="text-sm"><span id="online-count">0</span> online</p>
+      </div>
+      <ul class="mt-4 h-[75vh] space-y-4 overflow-y-auto pr-2" id="messages"></ul>
+      <form class="mt-4 flex overflow-hidden rounded-lg bg-slate-800 p-2 focus-within:outline focus-within:outline-orange-600 focus-within:outline-offset-4" id="form">
+        <input class="w-full flex-1 border-0 bg-transparent px-1 py-2 outline-none" id="input" autocomplete="off" />
+        <button class="ease inline-flex aspect-square w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-600 text-white transition-colors duration-300 hover:bg-orange-500">
+          <span class="sr-only">Send</span>
+          <i class="fa-regular fa-paper-plane" aria-hidden="true"></i>
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
 
-      form.onsubmit = function(e) {
-        e.preventDefault();
-        if (input.value) {
-          socket.emit('chat message', { username: username, msg: input.value });
-          input.value = '';
-        }
-      };
-
-      socket.on('chat message', ({ username, msg }) => {
-        const item = document.createElement('li')
-        item.textContent = `${username}: ${msg}`;
-        messages.appendChild(item)
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-
-      socket.on('user joined', (username) => {
-        const item = document.createElement('li')
-        item.textContent = `${username} joined the chat`;
-        messages.appendChild(item)
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-    </script>
-  </body>
 </html>

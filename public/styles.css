@@ -1,0 +1,16 @@
+#messages::-webkit-scrollbar {
+  display: none;
+}
+
+@media (pointer: fine) {
+  #messages::-webkit-scrollbar {
+    display: block;
+    width: .5rem;
+    background-color: transparent;
+  }
+
+  #messages::-webkit-scrollbar-thumb {
+    background-color: #1e293b;
+    border-radius: 100vmax;
+  }
+}
