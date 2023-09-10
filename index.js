@@ -2,14 +2,13 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const path = require('path');
 const { Server } = require('socket.io');
 const io = new Server(server);
 
-app.use(express.static('public'))
+app.use(express.static(__dirname + '/public'))
 
 app.get('/', (_, res) => {
-  res.sendFile(path.resolve(__dirname, 'public/index.html'));
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 const online = {};
