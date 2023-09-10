@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.chat-app ::-webkit-scrollbar {
+  @apply hidden;
+}
+
+@media (pointer: fine) {
+  .chat-app ::-webkit-scrollbar {
+    @apply block w-2 bg-transparent;
+  }
+
+  .chat-app ::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full;
+  }
+}

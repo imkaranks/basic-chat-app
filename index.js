@@ -8,23 +8,20 @@ const io = new Server(server);
 
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.sendFile(path.resolve(__dirname, 'public/index.html'));
 });
 
 const online = {};
 
 io.on('connection', (socket) => {
-  console.log('User connected', online);
-  
   socket.emit('connection', socket.id);
   
   socket.on('disconnect', () => {
-    console.log('User disconnected');
     io.emit('disconnected', online[socket.id]);
     io.in(socket.id).disconnectSockets();
     delete online[socket.id];
-    io.emit('online_users', Object.values(online));
+    io.emit('online_users', Object.entries(online));
   });
 
   socket.on('chat_message', ({ username, msg }) => {
@@ -33,11 +30,13 @@ io.on('connection', (socket) => {
 
   socket.on('user_joined', ({id, username}) => {
     online[id] = username;
-    io.emit('online_users', Object.values(online));
+    io.emit('online_users', Object.entries(online));
     socket.broadcast.emit('user_joined', username);
   });
 });
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+const port = process.env.PORT || 3000;
+
+server.listen(port, () => {
+  console.log('listening on *:%d', port);
 });
