@@ -41,3 +41,9 @@ Then, run the development server:
 ```bash
 npm run dev
 ```
+
+When working with tailwind make sure to watch for tailwind specific files and rebuild css when they change:
+
+```bash
+npm run tailwind:watch
+```
