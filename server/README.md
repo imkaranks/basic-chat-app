@@ -3,12 +3,12 @@
 First install the required dependencies:
 
 ```bash
+cd server
 npm install
 ```
 
 Then, run the development server:
 
 ```bash
-cd server
 npm run dev
 ```
