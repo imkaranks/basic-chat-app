@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div class="chat">
+      <header class="header">
+        <h1>Chattu</h1>
+
+        <nav class="nav">
+          <ul class="nav__list">
+            <li>
+              <a href="javascript:void(0)">Create room</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)">Join room</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      <h2 class="client__id"></h2>
+
+      <div class="chat__wrapper">
+        <div class="chat__peeps"></div>
+        <div class="chat__group">
+          <ul class="chat__list"></ul>
+        </div>
+      </div>
+
+      <form class="chat__form">
+        <input type="text" class="message" placeholder="Type Chat" />
+        <select class="select__users" name="users" id="users">
+          <option value="all">All</option>
+        </select>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
