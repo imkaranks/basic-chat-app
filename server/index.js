@@ -29,19 +29,21 @@ app.get("/", (_, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("you joined", (username) => {
+  socket.on("new user", (username) => {
     users[socket.id] = username;
-    socket.emit("you joined");
-    socket.broadcast.emit("user joined", {
+    // socket.emit("new user");
+    // socket.broadcast.emit("user joined", {
+    io.emit("user joined", {
+      id: socket.id,
       username: users[socket.id],
       users: users,
     });
   });
 
-  socket.on("chat message", ({ userId, message }) => {
-    if (userId !== null) {
+  socket.on("chat message", ({ userId, by, to, message }) => {
+    if (userId !== null && userId !== socket.id) {
       io.to([socket.id, userId]).emit("chat message", {
-        username: users[socket.id] + "(private)",
+        username: `@${users[by]} whispered @${users[to]}`,
         message,
       });
     } else {
@@ -50,8 +52,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    const goneUser = users[socket.id];
     delete users[socket.id];
-    io.emit("disconnect user", users);
+    io.emit("disconnect user", { username: goneUser, users });
     io.in(socket.id).disconnectSockets();
   });
 });
