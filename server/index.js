@@ -43,7 +43,16 @@ io.on("connection", (socket) => {
   socket.on("chat message", ({ userId, by, to, message }) => {
     if (userId !== null && userId !== socket.id) {
       io.to([socket.id, userId]).emit("chat message", {
-        username: `@${users[by]} whispered @${users[to]}`,
+        username: {
+          by: {
+            id: socket.id,
+            name: users[by],
+          },
+          to: {
+            id: userId,
+            name: users[to],
+          },
+        },
         message,
       });
     } else {

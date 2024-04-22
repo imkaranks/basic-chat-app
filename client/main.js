@@ -15,10 +15,28 @@ const createChat = (message, author, timestamp, opts = {}) => {
   const chatGroup = document.querySelector(".chat__group");
   const li = document.createElement("li");
   li.innerHTML = `
-    <img src="https://i.pravatar.cc/50" width="32px" height="32px" />
+    ${
+      typeof author !== "object"
+        ? `
+        <img src="https://robohash.org/${author}" width="32px" height="32px" />
+      `
+        : `
+        <!-- <div>
+          <img src="https://robohash.org/${author.by.name}" width="32px" height="32px" />
+          <img src="https://robohash.org/${author.to.name}" width="32px" height="32px" />
+        </div> -->
+        <img src="https://robohash.org/${author.by.name}" width="32px" height="32px" />
+      `
+    }
     <div>
       <div>
-        <span>${author}</span>
+        <span>${
+          typeof author !== "object"
+            ? "@" + author
+            : `${author.by.id === socket.id ? "me" : "@" + author.by.name} to ${
+                author.to.id === socket.id ? "me" : "@" + author.to.name
+              }`
+        }</span>
         ${timestamp ? `<span> • ${timestamp.toLocaleTimeString()}</span>` : ""}
       </div>
       <div>
@@ -59,28 +77,18 @@ socket.on("user joined", ({ id, username, users }) => {
   const onlinePeeps = { ...users };
   // delete onlinePeeps[socket.id];
   if (id === socket.id) {
-    createChat("joined the chat", "You");
     chatUserId.textContent = `${USERNAME}: ${socket.id}`;
-  } else {
-    createChat(`joined the chat`, `@${username}`);
   }
+  createChat(`joined the chat`, `${username}`);
   updateOnlinePeeps(onlinePeeps);
 });
 
 socket.on("chat message", ({ username, message }) => {
-  if (username.includes(USERNAME)) {
-    createChat(
-      `${message}`,
-      `${username.replace(`@${USERNAME}`, "you")}: `,
-      new Date()
-    );
-  } else {
-    createChat(`${message}`, `@${username}: `, new Date());
-  }
+  createChat(`${message}`, username, new Date());
 });
 
 socket.on("disconnect user", ({ username, users }) => {
-  createChat(`left the chat`, `@${username}`);
+  createChat(`left the chat`, `${username}`);
   updateOnlinePeeps(users);
 });
 
